@@ -26,7 +26,7 @@ $displayName = NULL;
 $errorcode = NULL;
 $mayCreate = true;
 
-$session = SimpleSAML_Session::getInstance();
+$session = SimpleSAML_Session::getSessionFromRequest();
 
 if (isset($_REQUEST['AuthState'])) {
     $authState = $_REQUEST['AuthState'];
@@ -40,7 +40,7 @@ if (isset($_REQUEST['AuthState'])) {
             $mayCreate = false;
             
             if ($session->isValid($config["enroll.authsource"])) {
-                $attributes = $session->getAttributes();
+                $attributes = $session->getAuthData($config["enroll.authsource"], 'Attributes');
                 // Check if userid exists
                 $uidAttribute = $config["enroll.uidAttribute"];
                 $displayNameAttribute = $config["enroll.cnAttribute"];

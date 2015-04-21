@@ -68,7 +68,7 @@ class sspmod_authTiqr_Auth_Process_Tiqr extends SimpleSAML_Auth_ProcessingFilter
     public function process(&$state) {
         assert('is_array($state)');
 
-        $session = SimpleSAML_Session::getInstance(); 
+        $session = SimpleSAML_Session::getSessionFromRequest(); 
         
         // Register a logout handler so we can later log ourselves out when needed.
         // @todo, this doesn't work; simplesamlphp mailinglist has been notified
@@ -105,7 +105,7 @@ class sspmod_authTiqr_Auth_Process_Tiqr extends SimpleSAML_Auth_ProcessingFilter
     public static function logout()
     {
         $server =  sspmod_authTiqr_Auth_Tiqr::getServer(false);
-        $session = SimpleSAML_Session::getInstance();
+        $session = SimpleSAML_Session::getSessionFromRequest();
         $sessionId = $session->getSessionId();
         $server->logout($sessionId);
     }

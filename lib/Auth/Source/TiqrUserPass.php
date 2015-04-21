@@ -82,7 +82,7 @@ class sspmod_authTiqr_Auth_Source_TiqrUserPass extends SimpleSAML_Auth_Source {
 
         $server =  sspmod_authTiqr_Auth_Tiqr::getServer(false);
         
-        $session = SimpleSAML_Session::getInstance();
+        $session = SimpleSAML_Session::getSessionFromRequest();
         $sessionId = $session->getSessionId();
         
         $user = $server->getAuthenticatedUser($sessionId);
@@ -93,10 +93,10 @@ class sspmod_authTiqr_Auth_Source_TiqrUserPass extends SimpleSAML_Auth_Source {
         } else {
             $attributes = array(
                 'uid' => array($user),
-                'displayName' => array(sspmod_authTiqr_User::getStorage()->getDisplayName($user)),
+                'displayName' => array(sspmod_authTiqr_Auth_Tiqr::getUserStorage()->getDisplayName($user)),
             );
 			
-            $attributes = array_merge($attributes, sspmod_authTiqr_User::getStorage()->getAdditionalAttributes($user));			
+            $attributes = array_merge($attributes, sspmod_authTiqr_Auth_Tiqr::getUserStorage()->getAdditionalAttributes($user));
             
             $state['Attributes'] = $attributes;
         }
@@ -162,7 +162,7 @@ class sspmod_authTiqr_Auth_Source_TiqrUserPass extends SimpleSAML_Auth_Source {
     {
         parent::logout($state);
         $server =  sspmod_authTiqr_Auth_Tiqr::getServer(false);
-        $session = SimpleSAML_Session::getInstance();
+        $session = SimpleSAML_Session::getSessionFromRequest();
         $sessionId = $session->getSessionId();
         $server->logout($sessionId);
     }
