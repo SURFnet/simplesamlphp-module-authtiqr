@@ -41,9 +41,8 @@ $config = array(
     "apns.certificate"    => "../../certificates/your_apple_push_notification_certificate.pem",
     "apns.environment"    => "sandbox",
     
-    "c2dm.username"       => "username for your android c2dm account",
-    "c2dm.password"       => "password",
-    "c2dm.application"    => "com.example.authenticator",
+    "gcm.application"    => "com.example.authenticator",
+    "gcm.apikey"          => "your GCM api key",
     
     // blocks configuration
     "maxAttempts"            => 3, // maximum number of login attempts before a block is set, set to 0 for not using blocks at all
