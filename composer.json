@@ -1,5 +1,5 @@
 {
-    "name": "SURFnet/simplesamlphp-module-tiqr",
+    "name": "SURFnet/simplesamlphp-module-authtiqr",
     "description": "Simplesamlphp  module for tiqr authentication.",
     "type": "simplesamlphp-module",
     "require": {
