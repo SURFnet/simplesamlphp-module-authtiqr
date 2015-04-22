@@ -1,0 +1,8 @@
+{
+    "name": "SURFnet/simplesamlphp-module-tiqr",
+    "description": "Simplesamlphp  module for tiqr authentication.",
+    "type": "simplesamlphp-module",
+    "require": {
+        "simplesamlphp/composer-module-installer": "~1.0"
+    }
+}
