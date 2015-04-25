@@ -2,14 +2,22 @@
     "name": "tiqr/simplesamlphp-module-authtiqr",
     "description": "Simplesamlphp  module for tiqr authentication.",
     "type": "simplesamlphp-module",
+    "repositories": [
+        {
+            "package": {
+                "name": "SURFnet/tiqr-server-libphp",
+                "source": {
+                    "reference": "origin/master",
+                    "type": "git",
+                    "url": "git@github.com:SURFnet/tiqr-server-libphp.git"
+                },
+                "version": "dev-master"
+            },
+            "type": "package"
+        }
+    ],
     "require": {
         "simplesamlphp/composer-module-installer": "~1.0",
         "SURFnet/tiqr-server-libphp": "dev-master"
-    },
-    "repositories": [
-    {
-       "type": "vcs",
-       "url": "https://github.com/SURFnet/tiqr-server-libphp.git"
     }
-    ]
 }
