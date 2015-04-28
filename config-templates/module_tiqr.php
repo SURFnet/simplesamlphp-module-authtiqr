@@ -24,14 +24,14 @@ $config = array(
     #"identifier"          => "yourserver.uri.com",
     "name"                => "Name of your service",
     "auth.protocol"       => "tiqrauth",	# protocol compiled into app
-    "enroll.protocol"     => "tiqrenroll"	# enroll protocol compiled in to app
+    "enroll.protocol"     => "tiqrenroll",	# enroll protocol compiled in to app
 
     "ocra.suite"          => "OCRA-1:HOTP-SHA1-6:QH10-S",
 
     "logoUrl"             => "https://demo.tiqr.org/img/tiqrRGB.png",	# change to your idp logo URL
     "infoUrl"             => "https://tiqr.org",			# change to your info page URL
 
-    "tiqr.path"           => "../vendor/SURFnet/tiqr-server-libphp/library/tiqr",
+    "tiqr.path"           => "../vendor/tiqr/tiqr-server-libphp/library/tiqr",
 
     "phpqrcode.path"      => "../vendor/phpqrcode/phpqrcode",
 
