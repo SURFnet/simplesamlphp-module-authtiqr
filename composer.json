@@ -2,6 +2,7 @@
     "name": "tiqr/simplesamlphp-module-authtiqr",
     "description": "Simplesamlphp  module for tiqr authentication.",
     "type": "simplesamlphp-module",
+    "license": "BSD-3-Clause",
     "repositories": [
         {
             "package": {
