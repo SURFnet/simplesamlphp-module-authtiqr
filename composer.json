@@ -4,18 +4,6 @@
     "type": "simplesamlphp-module",
     "license": "BSD-3-Clause",
     "repositories": [
-        {
-            "package": {
-                "name": "SURFnet/tiqr-server-libphp",
-                "source": {
-                    "reference": "origin/master",
-                    "type": "git",
-                    "url": "git@github.com:SURFnet/tiqr-server-libphp.git"
-                },
-                "version": "dev-master"
-            },
-            "type": "package"
-        },
 	{
             "package": {
                 "name": "phpqrcode/phpqrcode",
@@ -31,7 +19,7 @@
     ],
     "require": {
         "simplesamlphp/composer-module-installer": "~1.0",
-        "SURFnet/tiqr-server-libphp": "dev-master",
+        "tiqr/tiqr-server-libphp": "~1.1",
 	"phpqrcode/phpqrcode": "1.1.4",
         "zendframework/zendframework1": "~1.12"
     }
