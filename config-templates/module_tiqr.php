@@ -21,27 +21,26 @@
 
 $config = array(
 
-    "identifier"          => "yourserver.uri.com",
+    #"identifier"          => "yourserver.uri.com",
     "name"                => "Name of your service",
-    "auth.protocol"       => "protocol compiled into app",
-    "enroll.protocol"     => "enroll protocol compiled in to app",
+    "auth.protocol"       => "tiqrauth",	# protocol compiled into app
+    "enroll.protocol"     => "tiqrenroll"	# enroll protocol compiled in to app
 
     "ocra.suite"          => "OCRA-1:HOTP-SHA1-6:QH10-S",
 
-    "logoUrl"             => "http://path/to/your/idp/logo",
-    "infoUrl"             => "http://path/to/your/info/page",
+    "logoUrl"             => "https://demo.tiqr.org/img/tiqrRGB.png",	# change to your idp logo URL
+    "infoUrl"             => "https://tiqr.org",			# change to your info page URL
 
-    "tiqr.path"           => "../../library/tiqr",
+    "tiqr.path"           => "../vendor/SURFnet/tiqr-server-libphp/library/tiqr",
 
-    "phpqrcode.path"      => "../../library/phpqrcode",
+    "phpqrcode.path"      => "../vendor/phpqrcode/phpqrcode",
 
-    "zend.path"			  => "../../library/zend",
+    "zend.path"           => "../vendor/zendframework/zendframework1/library",
     
-    "apns.path"           => "../../library/apns-php",
-    "apns.certificate"    => "../../certificates/your_apple_push_notification_certificate.pem",
+    "apns.certificate"    => "../certificates/your_apple_push_notification_certificate.pem",
     "apns.environment"    => "sandbox",
     
-    "gcm.application"    => "com.example.authenticator",
+    "gcm.application"     => "com.example.authenticator",
     "gcm.apikey"          => "your GCM api key",
     
     // blocks configuration
