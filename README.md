@@ -14,7 +14,7 @@ If you don't, we'd like to refer you to the excellent documentation of simpleSAM
 
 To install in simplesamlphp, use the composer-based [simplesamlphp module installer](https://github.com/simplesamlphp/composer-module-installer)
 
-	composer require tiqr/simplesamlphp-module-tiqr "dev-master"
+	composer require tiqr/simplesamlphp-module-tiqr
 
 ## Manual install 
 
