@@ -33,7 +33,7 @@ $config = array(
 
     "tiqr.path"           => "../vendor/tiqr/tiqr-server-libphp/library/tiqr",
 
-    "phpqrcode.path"      => "../vendor/phpqrcode/phpqrcode",
+    "phpqrcode.path"      => "../vendor/kairos/phpqrcode",
 
     "zend.path"           => "../vendor/zendframework/zendframework1/library",
     
@@ -59,7 +59,7 @@ $config = array(
                                    "url"   => "http://path/to/your/tokenexchange/server/",
                                    "appid" => "idOfYourApp"),
 
-    "userstorage"         => array("type" => "file", "path" => "../../users", "encryption" => array('type' => 'dummy')),
+    "userstorage"         => array("type" => "file", "path" => "/tmp", "encryption" => array('type' => 'dummy')),
 
     // "userstorage"         =>  array("type" => "ldap",
     //                                 "encryption" => array('type' => 'dummy')
