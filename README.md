@@ -6,7 +6,9 @@ This module for simpleSAMLphp allows easy tiqr integration into an existing simp
 This document explains how to install the simpleSAMLphp module and how to configure it.
 
 We are going to assume you have a working simpleSAMLphp installation.
-If you don't, we'd like to refer you to the excellent documentation of simpleSAMLphp itself.
+If you don't, we'd like to refer you to the excellent
+[documentation](https://simplesamlphp.org/docs/stable/simplesamlphp-install)
+of simpleSAMLphp itself.
 
 # Installing the module and required libraries
 
@@ -18,20 +20,23 @@ To install in simplesamlphp, use the composer-based [simplesamlphp module instal
 
 ## Manual install 
 
-Download the latest version of the simpleSAMLphp module from the download page.
-There's a package with a demo setup, but for this howto we're focussing on the module itself, which is what you'll be using to integrate tiqr into your own setup.
-
-Also download the tiqr library from the download page, as the module is basically a wrapper around this library, which does all the hard work.
+Download the [latest version](https://github.com/SURFnet/simplesamlphp-module-authtiqr/releases/latest) of the simpleSAMLphp tiqr module.
+There's also a package with a demo setup, but for this howto we're focussing on the module itself, which is what you'll be using to integrate tiqr into your own setup.
 
 Install the module in the `modules/` directory of your simpleSAMLphp setup (or symlink it if you want to keep the directory structure clean).
 As per version 1.1, the module is enabled by default: no need for a 'touch enable' inside the module directory.
 In the rest of this post, we're going to assume the module is in `/opt/simplesamlphp/modules/authTiqr`
 
+Also download the [tiqr library](https://github.com/SURFnet/tiqr-server-libphp)
+from the download page, as the module is basically a wrapper around this library, which does all the hard work.
+
 Install the library anywhere you like, but preferably outside your document root so it can't be browsed directly.
 In the rest of this post we'll assume it's in `/opt/library/libTiqr` - adjust accordingly if you have it installed somewhere else.
 
-Finally you'll need to download phpqrcode and if you plan on using step-up authentication you'll also need Zend Framework for the push notifications.
+Finally you'll need to download [phpqrcode](http://phpqrcode.sourceforge.net) and if you plan on using step-up authentication you'll also need
+[Zend Framework](http://framework.zend.com/downloads/latest#ZF1) when using push notifications.
 We're assuming `/opt/library/zend-framework` in this post; again, adjust accordingly.
+The phpqrcode package also requires [php-gd](http://php.net/manual/en/book.image.php), which can usually be installed using your platform's package manager.
 
 # Configuration
 
@@ -61,6 +66,8 @@ If a user enrolls for your service, this page is where they'll go to for questio
 You can provide any url that you like but typically it's a page on your main company website.
 
 ### library location settings
+
+Note that the default paths assume you have installed using composer, and only need to be changed after a manual install.
 
 - `tiqr.path`: This is the path where you installed the tiqr library, e.g. `/opt/library/libTiqr`.
 You can provide an absolute path or a relative path (relative to the location of this config file!)
@@ -94,7 +101,7 @@ This setting can be user to store the secrets separately in a database or on a [
 - `temporaryBlockDuration`: duration of temporary block in minutes, set to 0 for no blocks or permanent blocks only.
 - `maxTemporaryBlocks`: defines the number of temporary blocks before setting a permanent block, set to anything other then 0 for using temporary and permanent blocks.
 
-# Using tiqr for general authentication
+## Using tiqr for general authentication
 
 To use tiqr for general authentication in a simpleSAMLphp setup, you should configure tiqr as an authsource.
 To do this, you have to add it to `simpleSAMLphp/config/authsources.php` like this:
@@ -103,13 +110,17 @@ To do this, you have to add it to `simpleSAMLphp/config/authsources.php` like th
          array(
              'authTiqr:Tiqr',
          ),
+         
 This allows users to login using the tiqr mechanism.
 The default implementation has a 'create new account' link in the login screen which allows uses to do a simple enrollment (typically you'll want to integrate enrollment into your business processes, but this should get you started).
-Using tiqr for step-up authentication
+
+## Using tiqr for step-up authentication
+
 Tiqr works great as a step-up authentication method.
 This means that the user logs in using a regular username/password method first, and then confirms his identity using his phone and a tiqr app.
 To accomplish this, tiqr supports use as a processing filter.
 This way you can append tiqr authentication to an existing authsource.
+
 To do this, edit `config/authsources.php` and hook up tiqr like this:
 
     'default-sp' =>
@@ -130,7 +141,7 @@ It then attaches a processing filter to it by adding an entry to the authproc ar
 All it takes is defining that the class for this filter is `authTiqr:Tiqr`, and a definition of which attributres Tiqr should use as the display name and user id in its authentication process.
 (in this case urn:oid:... identifiers since our hypothetical IDP uses oids).
 
-# Using tiqr for basic authentication, but another source for enrollment
+## Using tiqr for basic authentication, but another source for enrollment
 
 There is a third way to use Tiqr.
 Suppose you want to use it as the primary authentication method for a site, but you don't want anybody to be able to create accounts.
@@ -148,4 +159,5 @@ In that case, we would configure tiqr in `config/authsources.php` like this:
     ),
 
 This configures authTiqr as the main authsource, but it tells tiqr that for enrollment, it should use example-userpass (or any other authsource you have defined in `authsources.php`).
+
 Similar to the previous example we need to map the userid and display name of the other authsource to tiqr's fields, so that tiqr knows which fields to use for the user.
