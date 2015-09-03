@@ -86,8 +86,9 @@ $config = array(
     //                              "username" => "tiqr",
     //                              "password" => "*****"),
 
+    // secretstore can de defined to store user shared secrets separately
     // same as userstorage, but also possible to use an external oath service for storage
-    "usersecretstorage"   => array("type" => "file", "path" => "../../users/secrets"),
+    // "usersecretstorage"   => array("type" => "file", "path" => "../../users/secrets"),
 
     // "usersecretstorage"   =>  array("type" => "ldap",
     //                                 "host" => "ldap.surfnet.nl",
