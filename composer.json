@@ -3,6 +3,9 @@
     "description": "Simplesamlphp module for tiqr authentication.",
     "type": "simplesamlphp-module",
     "license": "BSD-3-Clause",
+    "extra": {
+        "ssp-mixedcase-module-name": "authTiqr"
+    },
     "require": {
         "simplesamlphp/composer-module-installer": "~1.0",
         "tiqr/tiqr-server-libphp": "~1.1"

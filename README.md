@@ -25,7 +25,7 @@ There's also a package with a demo setup, but for this howto we're focussing on 
 
 Install the module in the `modules/` directory of your simpleSAMLphp setup (or symlink it if you want to keep the directory structure clean).
 As per version 1.1, the module is enabled by default: no need for a 'touch enable' inside the module directory.
-In the rest of this post, we're going to assume the module is in `/opt/simplesamlphp/modules/authtiqr`
+In the rest of this post, we're going to assume the module is in `/opt/simplesamlphp/modules/authTiqr`
 
 Also download the [tiqr library](https://github.com/SURFnet/tiqr-server-libphp)
 from the download page, as the module is basically a wrapper around this library, which does all the hard work.
@@ -90,7 +90,7 @@ Set this to 'dummy' if you do want push notifications but do not want to use a t
 - `userstorage`: Tiqr must store user secrets and other details for a user.
 By default this setting is set to 'file' which stores the data in JSON files in the specifified directory.
 While this is great for testing purposes, we recommend you implement your own user storage (e.g. your existing user database or an LDAP server).
-To do this, have a look at the userstorage subdirectory in the `authtiqr` directory.
+To do this, have a look at the userstorage subdirectory in the `authTiqr` directory.
 - `usersecretstorage`: Tiqr must store user secrets and other details for a user.
 By default secrets are stored together with other user data.
 This setting can be user to store the secrets separately in a database or on a [separate host](https://github.com/SURFnet/oath-service-php).
