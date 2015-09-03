@@ -16,7 +16,7 @@ of simpleSAMLphp itself.
 
 To install in simplesamlphp, use the composer-based [simplesamlphp module installer](https://github.com/simplesamlphp/composer-module-installer)
 
-	composer require tiqr/simplesamlphp-module-tiqr
+	composer require tiqr/simplesamlphp-module-authtiqr
 
 ## Manual install 
 
