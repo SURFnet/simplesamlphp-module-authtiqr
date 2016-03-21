@@ -26,7 +26,17 @@ $displayName = NULL;
 $errorcode = NULL;
 $mayCreate = true;
 
-$session = SimpleSAML_Session::getSessionFromRequest();
+$tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
+$useOldVersion = false;
+if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+    $useOldVersion = true;
+}
+
+if ($useOldVersion) {
+    $session = SimpleSAML_Session::getInstance();
+} else {
+    $session = SimpleSAML_Session::getSessionFromRequest();
+}
 
 if (isset($_REQUEST['AuthState'])) {
     $authState = $_REQUEST['AuthState'];
@@ -40,7 +50,11 @@ if (isset($_REQUEST['AuthState'])) {
             $mayCreate = false;
             
             if ($session->isValid($config["enroll.authsource"])) {
-                $attributes = $session->getAuthData($config["enroll.authsource"], 'Attributes');
+                if ($useOldVersion) {
+                    $attributes = $session->getAttributes();
+                } else {
+                    $attributes = $session->getAuthData($config["enroll.authsource"], 'Attributes');
+                }
                 // Check if userid exists
                 $uidAttribute = $config["enroll.uidAttribute"];
                 $displayNameAttribute = $config["enroll.cnAttribute"];

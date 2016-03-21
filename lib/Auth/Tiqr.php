@@ -88,7 +88,12 @@ class sspmod_authTiqr_Auth_Tiqr
 
         $server = self::getServer(false);
 
-        $session = SimpleSAML_Session::getSessionFromRequest();
+        $tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
+        if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+            $session = SimpleSAML_Session::getInstance();
+        } else {
+            $session = SimpleSAML_Session::getSessionFromRequest();
+        }
         $sessionId = $session->getSessionId();
         
         $user = $server->getAuthenticatedUser($sessionId);
@@ -108,10 +113,15 @@ class sspmod_authTiqr_Auth_Tiqr
         if ($authStateId!=NULL) {
             self::_validateAuthState($authStateId);
         }
-        $server = self::getServer(false); 
+        $server = self::getServer(false);
 
-        $session = SimpleSAML_Session::getSessionFromRequest();
-        $sessionId = $session->getSessionId(); 
+        $tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
+        if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+            $session = SimpleSAML_Session::getInstance();
+        } else {
+            $session = SimpleSAML_Session::getSessionFromRequest();
+        }
+        $sessionId = $session->getSessionId();
 
         $status = $server->getEnrollmentStatus($sessionId);
         if ($status==Tiqr_Service::ENROLLMENT_STATUS_FINALIZED) {
@@ -128,7 +138,12 @@ class sspmod_authTiqr_Auth_Tiqr
         
         $server = self::getServer(false);
 
-        $session = SimpleSAML_Session::getSessionFromRequest();
+        $tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
+        if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+            $session = SimpleSAML_Session::getInstance();
+        } else {
+            $session = SimpleSAML_Session::getSessionFromRequest();
+        }
         $sessionId = $session->getSessionId();
         
         $user = $server->getAuthenticatedUser($sessionId);
@@ -220,7 +235,12 @@ class sspmod_authTiqr_Auth_Tiqr
     public static function resetEnrollmentSession()
     {
         $server = self::getServer(false);
-        $session = SimpleSAML_Session::getSessionFromRequest();
+        $tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
+        if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+            $session = SimpleSAML_Session::getInstance();
+        } else {
+            $session = SimpleSAML_Session::getSessionFromRequest();
+        }
         $sessionId = $session->getSessionId();
       
         $server->resetEnrollmentSession($sessionId);
@@ -249,7 +269,12 @@ class sspmod_authTiqr_Auth_Tiqr
     public static function startAuthenticationSession($userId="", $state)
     {
         $server = self::getServer(false);
-        $session = SimpleSAML_Session::getSessionFromRequest();
+        $tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
+        if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+            $session = SimpleSAML_Session::getInstance();
+        } else {
+            $session = SimpleSAML_Session::getSessionFromRequest();
+        }
         $sessionId = $session->getSessionId();
         $spIdentifier = self::_getSpIdentifier($state);
         
@@ -259,8 +284,13 @@ class sspmod_authTiqr_Auth_Tiqr
     public static function generateEnrollmentQR()
     {
         $server = self::getServer(false);
-        
-        $session = SimpleSAML_Session::getSessionFromRequest();
+
+        $tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
+        if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+            $session = SimpleSAML_Session::getInstance();
+        } else {
+            $session = SimpleSAML_Session::getSessionFromRequest();
+        }
         
         $userid = $session->getData("String", "enroll_userid");
         $fullname = $session->getData("String", "enroll_fullname");
