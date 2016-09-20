@@ -59,8 +59,7 @@ class sspmod_authTiqr_Auth_Process_Tiqr extends SimpleSAML_Auth_ProcessingFilter
             $this->_cnAttribute = $config["cnAttribute"];
         }
 
-        $tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
-        if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+        if (sspmod_authTiqr_Helper_VersionHelper::useOldVersion()) {
             $this->_oldSimpleSaml = true;
         }
         
@@ -127,8 +126,7 @@ class sspmod_authTiqr_Auth_Process_Tiqr extends SimpleSAML_Auth_ProcessingFilter
     {
         $server =  sspmod_authTiqr_Auth_Tiqr::getServer(false);
 
-        $tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
-        if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+        if (sspmod_authTiqr_Helper_VersionHelper::useOldVersion()) {
             $session = SimpleSAML_Session::getInstance();
         } else {
             $session = SimpleSAML_Session::getSessionFromRequest();

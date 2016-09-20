@@ -26,9 +26,8 @@ $displayName = NULL;
 $errorcode = NULL;
 $mayCreate = true;
 
-$tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
 $useOldVersion = false;
-if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+if (sspmod_authTiqr_Helper_VersionHelper::useOldVersion()) {
     $useOldVersion = true;
 }
 

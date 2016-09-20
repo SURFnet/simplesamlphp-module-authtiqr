@@ -81,8 +81,7 @@ class sspmod_authTiqr_Auth_Source_Tiqr extends SimpleSAML_Auth_Source {
 
         $server =  sspmod_authTiqr_Auth_Tiqr::getServer(false);
 
-        $tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
-        if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+        if (sspmod_authTiqr_Helper_VersionHelper::useOldVersion()) {
             $session = SimpleSAML_Session::getInstance();
         } else {
             $session = SimpleSAML_Session::getSessionFromRequest();
@@ -116,8 +115,7 @@ class sspmod_authTiqr_Auth_Source_Tiqr extends SimpleSAML_Auth_Source {
     public function logout(&$state) 
     {
         $server =  sspmod_authTiqr_Auth_Tiqr::getServer(false);
-        $tiqrConfig = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
-        if (isset($tiqrConfig['simplesaml.useOldVersion']) && $tiqrConfig['simplesaml.useOldVersion']) {
+        if (sspmod_authTiqr_Helper_VersionHelper::useOldVersion()) {
             $session = SimpleSAML_Session::getInstance();
         } else {
             $session = SimpleSAML_Session::getSessionFromRequest();
