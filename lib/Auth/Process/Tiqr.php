@@ -32,6 +32,13 @@ class sspmod_authTiqr_Auth_Process_Tiqr extends SimpleSAML_Auth_ProcessingFilter
 
     protected $_uidAttribute = "uid";
     protected $_cnAttribute = "cn";
+
+    /**
+     * Does the system use the older simplesaml version
+     *
+     * @var bool
+     */
+    protected $_oldSimpleSaml = false;
     
     /**
      * Initialize consent filter.
@@ -51,6 +58,10 @@ class sspmod_authTiqr_Auth_Process_Tiqr extends SimpleSAML_Auth_ProcessingFilter
         if (isset($config["cnAttribute"])) { 
             $this->_cnAttribute = $config["cnAttribute"];
         }
+
+        if (sspmod_authTiqr_Helper_VersionHelper::useOldVersion()) {
+            $this->_oldSimpleSaml = true;
+        }
         
         assert('is_array($config)');
 
@@ -64,12 +75,18 @@ class sspmod_authTiqr_Auth_Process_Tiqr extends SimpleSAML_Auth_ProcessingFilter
      * can authorize the release of the attributes.
      *
      * @param array $state  The state of the response.
+     *
+     * @throws SimpleSAML_Error_NoPassive|SimpleSAML_Error_Exception
      */
     public function process(&$state) {
         assert('is_array($state)');
 
-        $session = SimpleSAML_Session::getSessionFromRequest(); 
-        
+        if ($this->_oldSimpleSaml) {
+            $session = SimpleSAML_Session::getInstance();
+        } else {
+            $session = SimpleSAML_Session::getSessionFromRequest();
+        }
+
         // Register a logout handler so we can later log ourselves out when needed.
         // @todo, this doesn't work; simplesamlphp mailinglist has been notified
         $session->registerLogoutHandler('sspmod_authTiqr_Auth_Process_Tiqr', 'logout');
@@ -101,11 +118,20 @@ class sspmod_authTiqr_Auth_Process_Tiqr extends SimpleSAML_Auth_ProcessingFilter
         $url = SimpleSAML_Module::getModuleURL('authTiqr/login.php');
         SimpleSAML_Utilities::redirect($url, array('AuthState' => $id));
     }
-    
+
+    /**
+     * Logout
+     */
     public static function logout()
     {
         $server =  sspmod_authTiqr_Auth_Tiqr::getServer(false);
-        $session = SimpleSAML_Session::getSessionFromRequest();
+
+        if (sspmod_authTiqr_Helper_VersionHelper::useOldVersion()) {
+            $session = SimpleSAML_Session::getInstance();
+        } else {
+            $session = SimpleSAML_Session::getSessionFromRequest();
+        }
+
         $sessionId = $session->getSessionId();
         $server->logout($sessionId);
     }

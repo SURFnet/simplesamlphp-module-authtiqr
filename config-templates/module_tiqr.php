@@ -42,7 +42,7 @@ $config = array(
     
     "gcm.application"     => "com.example.authenticator",
     "gcm.apikey"          => "your GCM api key",
-    
+
     // blocks configuration
     "maxAttempts"            => 3, // maximum number of login attempts before a block is set, set to 0 for not using blocks at all
     "temporaryBlockDuration" => 0, // duration of temporary block in minutes, set to 0 for no blocks or permanent blocks only

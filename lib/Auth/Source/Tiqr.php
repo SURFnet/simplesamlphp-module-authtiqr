@@ -81,7 +81,12 @@ class sspmod_authTiqr_Auth_Source_Tiqr extends SimpleSAML_Auth_Source {
 
         $server =  sspmod_authTiqr_Auth_Tiqr::getServer(false);
 
-        $session = SimpleSAML_Session::getSessionFromRequest();
+        if (sspmod_authTiqr_Helper_VersionHelper::useOldVersion()) {
+            $session = SimpleSAML_Session::getInstance();
+        } else {
+            $session = SimpleSAML_Session::getSessionFromRequest();
+        }
+
         $sessionId = $session->getSessionId();
         
         $user = $server->getAuthenticatedUser($sessionId);
@@ -91,7 +96,6 @@ class sspmod_authTiqr_Auth_Source_Tiqr extends SimpleSAML_Auth_Source {
             $url = SimpleSAML_Module::getModuleURL('authTiqr/login.php');
             SimpleSAML_Utilities::redirect($url, array('AuthState' => $id));
         } else {
-    
             $attributes = array(
                 'uid' => array($user),
                 'displayName' => array(sspmod_authTiqr_Auth_Tiqr::getUserStorage()->getDisplayName($user)),
@@ -111,7 +115,11 @@ class sspmod_authTiqr_Auth_Source_Tiqr extends SimpleSAML_Auth_Source {
     public function logout(&$state) 
     {
         $server =  sspmod_authTiqr_Auth_Tiqr::getServer(false);
-        $session = SimpleSAML_Session::getSessionFromRequest();
+        if (sspmod_authTiqr_Helper_VersionHelper::useOldVersion()) {
+            $session = SimpleSAML_Session::getInstance();
+        } else {
+            $session = SimpleSAML_Session::getSessionFromRequest();
+        }
         $sessionId = $session->getSessionId();
         $server->logout($sessionId);
     }
