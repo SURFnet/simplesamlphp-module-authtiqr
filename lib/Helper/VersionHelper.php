@@ -3,7 +3,8 @@
 class sspmod_authTiqr_Helper_VersionHelper {
 
     public static function useOldVersion() {
-        list($majorVersion, $minorVersion, $revisionVersion) = explode('.', SimpleSAML_Configuration::getVersion());
+        $config = SimpleSAML_Configuration::getInstance();
+        list($majorVersion, $minorVersion, $revisionVersion) = explode('.', $config->getVersion());
 
         if ($majorVersion == 'master') {
             return false;
