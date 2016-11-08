@@ -368,13 +368,13 @@ class sspmod_authTiqr_Auth_Tiqr
                         else if ($attempts < ($maxAttempts-1)) {
                             $store->setLoginAttempts($userId, $attempts+1);
                         } else {
-                            // Block user and destroy secret
+                            // Block user
                             $store->setBlocked($userId, true);
                             $store->setLoginAttempts($userId, 0);
                             
                             if (0 == $tempBlockDuration) {
+                                // No temporary blocks: destroy secret
                                 $store->setSecret($userId, NULL);
-                                $store->setBlocked($userId, true);
                             }
                             elseif ($tempBlockDuration > 0) {
                                 $tempAttempts = $store->getTemporaryBlockAttempts($userId);
