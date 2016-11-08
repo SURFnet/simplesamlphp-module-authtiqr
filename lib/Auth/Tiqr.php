@@ -370,10 +370,13 @@ class sspmod_authTiqr_Auth_Tiqr
                         } else {
                             // Block user and destroy secret
                             $store->setBlocked($userId, true);
-                            $store->setSecret($userId, NULL);
                             $store->setLoginAttempts($userId, 0);
                             
-                            if ($tempBlockDuration > 0) {
+                            if (0 == $tempBlockDuration) {
+                                $store->setSecret($userId, NULL);
+                                $store->setBlocked($userId, true);
+                            }
+                            elseif ($tempBlockDuration > 0) {
                                 $tempAttempts = $store->getTemporaryBlockAttempts($userId);
                                 if (0 == $maxTempBlocks) {
                                     // always a temporary block
@@ -387,6 +390,7 @@ class sspmod_authTiqr_Auth_Tiqr
                                 else {
                                     // remove timestamp to make this a permanent block
                                     $store->setTemporaryBlockTimestamp($userId, false);
+                                    $store->setSecret($userId, NULL);                                    
                                 }
                             }
                         }
