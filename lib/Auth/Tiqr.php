@@ -514,7 +514,8 @@ class sspmod_authTiqr_Auth_Tiqr
     {
         // check if the client supports json, if not fallback to the plain text
     	if (self::getProtocolVersion(true) > 1) {
-            return Tiqr_Response_Abstract::createResponse();
+            $v1 = new Tiqr_Response_V1(); // TODO: this is the only concrete class?
+            return $v1->createResponse();
         } else {
             return new sspmod_authTiqr_Response_Plain();
         }
