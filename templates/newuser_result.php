@@ -20,6 +20,11 @@
 
 $this->data['header'] = $this->t('{authTiqr:tiqr:header_enrollment}');
 $this->data['jquery'] = array('version' => '1.6', 'core' => true);
+if (sspmod_authTiqr_Helper_VersionHelper::useOldVersion()) {
+    $this->data['jquery'] = array('version' => '1.6', 'core' => true);
+} else {
+    $this->data['jquery'] = array('version' => '1.8', 'core' => true);
+}
 
 $this->includeAtTemplateBase('includes/header.php');
 
