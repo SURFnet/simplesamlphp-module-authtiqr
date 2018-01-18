@@ -433,6 +433,18 @@ class sspmod_authTiqr_Auth_Tiqr
         return $metadata;
     }
 
+    /**
+     * Get the state storage object for temporary user storage
+     *
+     * @return Tiqr_StateStorage_File|Tiqr_StateStorage_Memcache|Tiqr_StateStorage_Pdo
+     */
+    public static function getStateStorage()
+    {
+        $type = "file";
+        $storageOptions = array();
+        return Tiqr_StateStorage::getStorage($type, $storageOptions);
+    }
+
     public static function processMobileEnrollment($request)
     {
         if (!isset($request["key"])||!isset($request["secret"])) {
@@ -444,7 +456,10 @@ class sspmod_authTiqr_Auth_Tiqr
         $userId = $server->validateEnrollmentSecret($request["key"]);
         if ($userId !== false) {
             $store = self::getUserStorage();
-            if ($store->userExists($userId)) {
+            $stateStore = self::getStateStorage();
+            $displayName = $stateStore->getValue($userId);
+            if ($displayName) {
+                $store->createUser($userId, $displayName);
                 $store->setSecret($userId, $request["secret"]);
                 $store->setBlocked($userId, false); // remove any pending blocks upon re-enrollment.
                 $store->setLoginAttempts($userId, 0);
