@@ -440,8 +440,14 @@ class sspmod_authTiqr_Auth_Tiqr
      */
     public static function getStateStorage()
     {
-        $type = "file";
-        $storageOptions = array();
+        $config = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
+        if (is_array($config['statestorage']) && count($config['statestorage']) && $config['statestorage']['type']) {
+            $type = $config['statestorage']['type'];
+            $storageOptions = $config['statestorage'];
+        } else {
+            $type = "file";
+            $storageOptions = array();
+        }
         return Tiqr_StateStorage::getStorage($type, $storageOptions);
     }
 
