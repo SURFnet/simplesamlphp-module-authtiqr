@@ -547,8 +547,9 @@ class sspmod_authTiqr_Auth_Tiqr
         
         $output = $server->getResourceAccessURL($request["id"], $spIdentifier);
         
-        header("Content-Type:html");
-        echo '<a href="'.$output.'">'.$output.'</a>'; die;
+        // POC TEST: if you want to test with a browser instead of an app, enable this code.
+        // header("Content-Type:html");
+        // echo '<a href="'.$output.'">'.$output.'</a>'; die;
         
         return array("authUrl" => $output);
     }
