@@ -533,6 +533,25 @@ class sspmod_authTiqr_Auth_Tiqr
 
         return $state;   
     }
+    
+    public static function getAccessMetadata($request)
+    {
+        if (!isset($request["id"])) {
+            return false;
+        }
+        
+        $server = self::getServer(false);
+       
+        // Accessibe resources (doors etc) have no 'session', they use a resource session
+        $spIdentifier = self::_getSpIdentifier(array())." # "."Deur 3.1";
+        
+        $output = $server->getResourceAccessURL($request["id"], $spIdentifier);
+        
+        header("Content-Type:html");
+        echo '<a href="'.$output.'">'.$output.'</a>'; die;
+        
+        return array("authUrl" => $output);
+    }
 }
 
 sspmod_authTiqr_Auth_Tiqr::classAutoLoader();
