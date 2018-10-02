@@ -77,6 +77,7 @@ if (isset($_REQUEST['AuthState'])) {
 $template = 'newuser.php';
 
 $store = sspmod_authTiqr_Auth_Tiqr::getUserStorage();
+$stateStore = sspmod_authTiqr_Auth_Tiqr::getStateStorage();
 
 if (is_array($_POST) && count($_POST) && isset($_POST["create"])) {
     
@@ -98,14 +99,9 @@ if (is_array($_POST) && count($_POST) && isset($_POST["create"])) {
 
     } else {
 
-        if ($store->userExists($userId)) {
-            // User already exists. If we don't have a secret yet, we must however still enroll him.
-            if (!$store->getSecret($userId)) {
-                $template = "newuser_result.php";
-            } else {
-                $errorcode = 'userexists';
-            }
-        } else if (!$store->createUser($userId, $displayName)) {
+        if ($store->userExists($userId) || $stateStore->getValue($userId)) {
+            $errorcode = 'userexists';
+        } else if (!$stateStore->setValue($userId, $displayName, Tiqr_Service::ENROLLMENT_EXPIRE)) {
             $errorcode = 'createfailed';
         } else {
             // User created, show enrollment QR
