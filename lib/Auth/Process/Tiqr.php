@@ -89,7 +89,7 @@ class sspmod_authTiqr_Auth_Process_Tiqr extends SimpleSAML_Auth_ProcessingFilter
 
         // Register a logout handler so we can later log ourselves out when needed.
         // @todo, this doesn't work; simplesamlphp mailinglist has been notified
-        $session->registerLogoutHandler('sspmod_authTiqr_Auth_Process_Tiqr', 'logout');
+        $session->registerLogoutHandler('', 'sspmod_authTiqr_Auth_Process_Tiqr', 'logout');
         
         $sessionId = $session->getSessionId();
               
