@@ -2,15 +2,15 @@
 
 /**
  * This file is part of simpleSAMLphp.
- * 
- * The authTiqr module is a module adding authentication via the tiqr 
- * project to simpleSAMLphp. It was initiated by SURFnet and 
+ *
+ * The authTiqr module is a module adding authentication via the tiqr
+ * project to simpleSAMLphp. It was initiated by SURFnet and
  * developed by Egeniq.
  *
  * See the README file for instructions and requirements.
  *
  * @author Ivo Jansch <ivo@egeniq.com>
- * 
+ *
  * @package simpleSAMLphp
  * @subpackage authTiqr
  *
@@ -39,11 +39,23 @@ if (array_key_exists('userId', $_REQUEST)) {
     $userId = '';
 }
 
+if (array_key_exists('notificationType', $_REQUEST)) {
+    $notificationType = $_REQUEST['notificationType'];
+} else {
+    $notificationType = '';
+}
+
+if (array_key_exists('notificationAddress', $_REQUEST)) {
+    $notificationAddress = $_REQUEST['notificationAddress'];
+} else {
+    $notificationAddress = '';
+}
+
 $attemptsLeft = NULL;
 
 if (!empty($otp)) {
 	/*  attempt to log in. */
-	$result = sspmod_authTiqr_Auth_Tiqr::processManualLogin($userId, $otp, $state[sspmod_authTiqr_Auth_Tiqr::SESSIONKEYID]);
+	$result = sspmod_authTiqr_Auth_Tiqr::processManualLogin($userId, $otp, $state[sspmod_authTiqr_Auth_Tiqr::SESSIONKEYID], $notificationType, $notificationAddress);
 
 	if ($result=="OK") {
 	     $url = SimpleSAML_Module::getModuleURL('authTiqr/complete.php');
@@ -56,19 +68,19 @@ if (!empty($otp)) {
             $attemptsLeft = $elems[1];
 	    }
 	}
-	
+
 } else {
 	$errorCode = NULL;
-	
-	// Initialize a new session. 
+
+	// Initialize a new session.
 	$state[sspmod_authTiqr_Auth_Tiqr::SESSIONKEYID] = sspmod_authTiqr_Auth_Tiqr::startAuthenticationSession($userId, $state);
     SimpleSAML_Auth_State::saveState($state, sspmod_authTiqr_Auth_Tiqr::STAGEID);
 }
 
 
 
-$push = false; 
-$enroll = false; 
+$push = false;
+$enroll = false;
 $mayCreate = true;
 $enrollUrl = "";
 
@@ -79,12 +91,12 @@ $t->data['stateparams'] = array('AuthState' => $authState);
 
 if (isset($state["tiqrUser"])) {
     $mayCreate = false;
-    
+
     // 2 factor authentication
-    if (!sspmod_authTiqr_Auth_Tiqr::isEnrolled($state["tiqrUser"]["userId"])) { 
+    if (!sspmod_authTiqr_Auth_Tiqr::isEnrolled($state["tiqrUser"]["userId"])) {
         $enrollUrl = SimpleSAML_Module::getModuleURL('authTiqr/newuser.php', array('AuthState' => $authState));
         $enroll = true;
-    } else {    
+    } else {
         // we have a user. Send notification.
         $push = sspmod_authTiqr_Auth_Tiqr::sendAuthNotification($authState);
     }

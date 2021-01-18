@@ -1,15 +1,15 @@
 <?php
 /**
  * This file is part of simpleSAMLphp.
- * 
- * The authTiqr module is a module adding authentication via the tiqr 
- * project to simpleSAMLphp. It was initiated by SURFnet and 
+ *
+ * The authTiqr module is a module adding authentication via the tiqr
+ * project to simpleSAMLphp. It was initiated by SURFnet and
  * developed by Egeniq.
  *
  * See the README file for instructions and requirements.
  *
  * @author Ivo Jansch <ivo@egeniq.com>
- * 
+ *
  * @package simpleSAMLphp
  * @subpackage authTiqr
  *
@@ -33,12 +33,12 @@ class sspmod_authTiqr_Auth_Tiqr
     const CONFIGID = 'sspmod_authTiqr_Auth_Tiqr.config';
     const USERPASSSOURCEID = 'sspmod_authTiqr_Auth_Tiqr.userPassSource';
     const SESSIONKEYID = 'sspmod_authTiqr_Auth_Tiqr.sessionkey';
-    
+
     /**
      * User storage instance.
      */
     private static $_userStorage = null;
-    
+
     /**
      * Class autoloader.
      */
@@ -56,20 +56,20 @@ class sspmod_authTiqr_Auth_Tiqr
         $autoloader = Tiqr_AutoLoader::getInstance($path);
         $autoloader->setIncludePath();
     }
-    
+
     /**
      * Returns the user storage.
-     */ 
-    public static function getUserStorage() 
+     */
+    public static function getUserStorage()
     {
         if (self::$_userStorage == null) {
             $config = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
             self::$_userStorage = Tiqr_UserStorage::getStorage($config["userstorage"]["type"], $config["userstorage"], (isset($config['usersecretstorage']) ? $config['usersecretstorage'] : array()));
         }
-        
+
         return self::$_userStorage;
     }
-    
+
     /**
      * Handle login request.
      *
@@ -82,7 +82,7 @@ class sspmod_authTiqr_Auth_Tiqr
      * @param string $otp  The one time password entered-
      * @return string  Error code in the case of an error.
      */
-    public static function verifyLogin($authStateId) 
+    public static function verifyLogin($authStateId)
     {
         self::_validateAuthState($authStateId);
 
@@ -94,17 +94,17 @@ class sspmod_authTiqr_Auth_Tiqr
             $session = SimpleSAML_Session::getSessionFromRequest();
         }
         $sessionId = $session->getSessionId();
-        
+
         $user = $server->getAuthenticatedUser($sessionId);
         if (empty($user)) {
             echo "NO";
             // Not logged in yet, ajax call can silently stop.
-        
+
         } else {
             $url = SimpleSAML_Module::getModuleURL('authTiqr/complete.php', array('AuthState' => $authStateId));
             echo 'URL:'.$url;
         }
-        
+
     }
 
     public static function verifyEnrollment($authStateId=NULL)
@@ -129,11 +129,11 @@ class sspmod_authTiqr_Auth_Tiqr
             echo "NO";
         }
     }
-    
+
     public static function completeLogin($authStateId)
     {
         $state = self::_validateAuthState($authStateId);
-        
+
         $server = self::getServer(false);
 
         if (sspmod_authTiqr_Helper_VersionHelper::useOldVersion()) {
@@ -142,17 +142,17 @@ class sspmod_authTiqr_Auth_Tiqr
             $session = SimpleSAML_Session::getSessionFromRequest();
         }
         $sessionId = $session->getSessionId();
-        
+
         $user = $server->getAuthenticatedUser($sessionId);
         if (empty($user)) {
-        
+
             $url = SimpleSAML_Module::getModuleURL('authTiqr/login.php');
             SimpleSAML_Utilities::redirect($url, array('AuthState' => $authStateId));
         } else {
-            
+
             if (!isset($state["tiqrUser"])) {
                 // Single factor. We can now continue to login.
-            
+
                 $attributes = array(
                     'uid' => array($user),
                     'displayName' => array(self::getUserStorage()->getDisplayName($user)),
@@ -167,23 +167,23 @@ class sspmod_authTiqr_Auth_Tiqr
                 SimpleSAML_Auth_ProcessingChain::resumeProcessing($state);
             }
         }
-        
-        
+
+
     }
-    
+
     public static function getAuthenticateUrl($sessionKey)
     {
         $server = self::getServer(false);
-       
+
         return $server->generateAuthURL($sessionKey);
     }
-    
+
     public static function sendAuthNotification($authStateId)
     {
         $server = self::getServer(false);
-                
+
         $state = self::_validateAuthState($authStateId);
-                
+
         $userId = NULL;
         if (isset($state["tiqrUser"])) {
             $userId = $state["tiqrUser"]["userId"];
@@ -195,18 +195,18 @@ class sspmod_authTiqr_Auth_Tiqr
         if (!$store->userExists($userId)) {
             return false;
         }
-        
+
         $notificationType = $store->getNotificationType($userId);
         $notificationAddress = $store->getNotificationAddress($userId);
         $translatedAddress = $server->translateNotificationAddress($notificationType, $notificationAddress);
-                        
+
         if ($translatedAddress) {
             return $server->sendAuthNotification($state[self::SESSIONKEYID], $notificationType, $translatedAddress);
         } else {
             return false;
         }
     }
-    
+
     public static function isEnrolled($userId)
     {
         $store = self::getUserStorage();
@@ -216,16 +216,16 @@ class sspmod_authTiqr_Auth_Tiqr
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     public static function generateAuthQR($authStateId)
     {
         $server = self::getServer(false);
-                
+
         $state = self::_validateAuthState($authStateId);
-                         
+
         return $server->generateAuthQR($state[self::SESSIONKEYID]);
     }
 
@@ -238,11 +238,11 @@ class sspmod_authTiqr_Auth_Tiqr
             $session = SimpleSAML_Session::getSessionFromRequest();
         }
         $sessionId = $session->getSessionId();
-      
+
         $server->resetEnrollmentSession($sessionId);
-        
+
     }
-    
+
     protected static function _getSpIdentifier($state)
     {
         if (isset($state["saml:RelayState"])) {
@@ -255,13 +255,13 @@ class sspmod_authTiqr_Auth_Tiqr
             // Nothing to go by. Fall back to our own hostname.
             $url = SimpleSAML_Utilities::selfURLhost();
         }
-        
+
         $host = parse_url($url, PHP_URL_HOST);
-        
+
         return $host;
-        
+
     }
-    
+
     public static function startAuthenticationSession($userId="", $state)
     {
         $server = self::getServer(false);
@@ -272,10 +272,10 @@ class sspmod_authTiqr_Auth_Tiqr
         }
         $sessionId = $session->getSessionId();
         $spIdentifier = self::_getSpIdentifier($state);
-        
+
         return $server->startAuthenticationSession($userId, $sessionId, $spIdentifier);
     }
-    
+
     public static function generateEnrollmentQR()
     {
         $server = self::getServer(false);
@@ -285,74 +285,78 @@ class sspmod_authTiqr_Auth_Tiqr
         } else {
             $session = SimpleSAML_Session::getSessionFromRequest();
         }
-        
+
         $userid = $session->getData("String", "enroll_userid");
         $fullname = $session->getData("String", "enroll_fullname");
 
         $sessionId = $session->getSessionId();
         $enrollmentKey = $server->startEnrollmentSession($userid, $fullname, $sessionId);
-        
+
         $metadataUrl = SimpleSAML_Module::getModuleURL('authTiqr/metadata.php', array('key' => $enrollmentKey));
-        
+
         $server->generateEnrollmentQR($metadataUrl);
     }
-    
-    public static function processManualLogin($userId, $otp, $sessionKey)
-    {        
-        return self::_processLogin($userId, $otp, $sessionKey);
+
+    public static function processManualLogin($userId, $otp, $sessionKey, $notificationType, $notificationAddress)
+    {
+        return self::_processLogin($userId, $otp, $sessionKey, $notificationType, $notificationAddress);
     }
-    
+
     public static function processMobileLogin($request)
     {
         $responseObj = self::getResponse();
         if (!isset($request["sessionKey"]) || !isset($request["userId"]) || !isset($request["response"])) {
             return $responseObj->getInvalidRequestResponse();
-        } 
-            
+        }
+
         $key = $request["sessionKey"];
         $userId = $request["userId"];
         $response = $request["response"];
-        
-        return self::_processLogin($userId, $response, $key);
+        $notificationType = isset($request["notificationType"]) ? $request["notificationType"] : '';
+        $notificationAddress = isset($request["notificationAddress"]) ? $request["notificationAddress"] : '';
+
+        return self::_processLogin($userId, $response, $key, $notificationType, $notificationAddress);
     }
-    
+
     /**
-     * 
+     *
      * Enter description here ...
      * @param string $userId
      * @param string $response
      * @param string $sessionKey
+     * @param string $notificationType
+     * @param string $notificationAddress
      * @return string|array an all-caps string indicating the authentication result or an array.
      */
-    protected static function _processLogin($userId, $response, $sessionKey)
+    protected static function _processLogin($userId, $response, $sessionKey, $notificationType, $notificationAddress)
     {
         $responseObj = self::getResponse();
-        
+
         try {
             $server = self::getServer(true);
-                
+
             $store  = self::getUserStorage();
             $config = SimpleSAML_Configuration::getConfig('module_tiqr.php')->toArray();
-            
+
             $tempBlockDuration = array_key_exists('temporaryBlockDuration', $config) ? $config['temporaryBlockDuration'] : 0;
             $maxTempBlocks = array_key_exists('maxTemporaryBlocks', $config) ? $config['maxTemporaryBlocks'] : 0;
             $maxAttempts = array_key_exists('maxAttempts', $config) ? $config['maxAttempts'] : 3;
-            
+
             if ($store->isBlocked($userId, $tempBlockDuration)) {
                 return $responseObj->getAccountBlockedResponse($tempBlockDuration);
             } else if ($store->userExists($userId)) {
                 $secret = $store->getSecret($userId);
-                $result = $server->authenticate($userId, $secret, $sessionKey, $response); 
+                $result = $server->authenticate($userId, $secret, $sessionKey, $response);
                 switch ($result) {
                     case Tiqr_Service::AUTH_RESULT_AUTHENTICATED:
                         // Reset the login attempts counter
                         $store->setLoginAttempts($userId, 0);
-                        
+
                         // update notification information if given, on successful login
-                        if (isset($request["notificationType"])) {
-                            $store->setNotificationType($userId, $request["notificationType"]);
-                            if (isset($request['notificationAddress'])) {
-                                $store->setNotificationAddress($userId, $request["notificationAddress"]);                    
+                        if ($notificationType) {
+                            $store->setNotificationType($userId, $notificationType);
+                            if ($notificationAddress) {
+                                $store->setNotificationAddress($userId, $notificationAddress);
                             }
                         }
                         return $responseObj->getLoginResponse();
@@ -371,7 +375,7 @@ class sspmod_authTiqr_Auth_Tiqr
                             // Block user
                             $store->setBlocked($userId, true);
                             $store->setLoginAttempts($userId, 0);
-                            
+
                             if (0 == $tempBlockDuration) {
                                 // No temporary blocks: destroy secret
                                 $store->setSecret($userId, NULL);
@@ -386,11 +390,11 @@ class sspmod_authTiqr_Auth_Tiqr
                                     // temporary block which could turn into a permanent block
                                     $store->setTemporaryBlockAttempts($userId, $tempAttempts+1);
                                     $store->setTemporaryBlockTimestamp($userId, date("Y-m-d H:i:s"));
-                                } 
+                                }
                                 else {
                                     // remove timestamp to make this a permanent block
                                     $store->setTemporaryBlockTimestamp($userId, false);
-                                    $store->setSecret($userId, NULL);                                    
+                                    $store->setSecret($userId, NULL);
                                 }
                             }
                         }
@@ -401,15 +405,15 @@ class sspmod_authTiqr_Auth_Tiqr
                         return $responseObj->getErrorResponse(); // Shouldn't happen
                 }
             }
-            return $responseObj->getInvalidResponse(); 
+            return $responseObj->getInvalidResponse();
         }
         catch (Exception $error) {
             // If anything goes wrong, we should return a generic error.
             return $responseObj->getErrorResponse();
         }
-    
+
     }
-    
+
     public static function getEnrollmentMetadata($request)
     {
         if (!isset($request["key"])) {
@@ -421,15 +425,15 @@ class sspmod_authTiqr_Auth_Tiqr
         $server = self::getServer(true);
 
         $enrollmentSecret = $server->getEnrollmentSecret($request["key"]);
-        
+
         $enrollmentUrl = SimpleSAML_Module::getModuleURL('authTiqr/enroll.php', array('key' => $enrollmentSecret));
-        
+
         $metadata = $server->getEnrollmentMetadata($request["key"], $authenticationUrl, $enrollmentUrl);
-        
+
         if (!is_array($metadata)) {
             return false;
         }
-        
+
         return $metadata;
     }
 
@@ -456,7 +460,7 @@ class sspmod_authTiqr_Auth_Tiqr
         if (!isset($request["key"])||!isset($request["secret"])) {
             return false;
         }
-        $server = self::getServer(true); 
+        $server = self::getServer(true);
         $responseObj = self::getResponse();
 
         $userId = $server->validateEnrollmentSecret($request["key"]);
@@ -469,19 +473,19 @@ class sspmod_authTiqr_Auth_Tiqr
                 $store->setSecret($userId, $request["secret"]);
                 $store->setBlocked($userId, false); // remove any pending blocks upon re-enrollment.
                 $store->setLoginAttempts($userId, 0);
-                
+
                 if (method_exists($store, 'setTemporaryBlockAttempt')) {
                     $store->setTemporaryBlockAttempt($userId, 0);
                 }
-                
+
                 if (method_exists($store, 'setTemporaryBlockTimestamp')) {
                     $store->setTemporaryBlockTimestamp($userId, false);
                 }
-                
+
                 if (isset($request["notificationType"])) {
                     $store->setNotificationType($userId, $request["notificationType"]);
                     if (isset($request['notificationAddress'])) {
-                        $store->setNotificationAddress($userId, $request["notificationAddress"]);                    
+                        $store->setNotificationAddress($userId, $request["notificationAddress"]);
                     }
                 }
                 $server->finalizeEnrollment($request["key"]);
@@ -489,9 +493,9 @@ class sspmod_authTiqr_Auth_Tiqr
             }
         }
         return $responseObj->getEnrollmentErrorResponse();
-    } 
-    
-    public static function getProtocolVersion($clientContext) 
+    }
+
+    public static function getProtocolVersion($clientContext)
     {
         if (isset($_SERVER["HTTP_X_TIQR_PROTOCOL_VERSION"])) {
             // Client has sent the X-TIQR-Protocol-Version header
@@ -506,10 +510,10 @@ class sspmod_authTiqr_Auth_Tiqr
                 $protocolVersion = 2;
             }
         }
-        
+
         return $protocolVersion;
     }
-    
+
     /**
      * @return Tiqr_Service
      */
@@ -520,7 +524,7 @@ class sspmod_authTiqr_Auth_Tiqr
 
         return $server;
     }
-    
+
     public static function getAuthSourceConfig($authStateId)
     {
         $state = SimpleSAML_Auth_State::loadState($authStateId, self::STAGEID);
@@ -529,11 +533,11 @@ class sspmod_authTiqr_Auth_Tiqr
         }
         return array();
     }
-    
+
     /**
      * Get the response object
-     * 
-     * @return object 
+     *
+     * @return object
      */
     public static function getResponse()
     {
@@ -545,14 +549,14 @@ class sspmod_authTiqr_Auth_Tiqr
             return new sspmod_authTiqr_Response_Plain();
         }
     }
-    
+
     protected static function _validateAuthState($authStateId)
-    {       
+    {
         assert('is_string($authStateId)');
         /* Retrieve the authentication state. */
         $state = SimpleSAML_Auth_State::loadState($authStateId, self::STAGEID);
 
-        return $state;   
+        return $state;
     }
 }
 

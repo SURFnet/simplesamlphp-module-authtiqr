@@ -1,11 +1,11 @@
 <?php
 /**
  * This file is part of the Sufnet SimpleSAMLphp module.
- * 
+ *
  * @author Peter Verhage <peter@egeniq.com>
- * 
+ *
  * @package simpleSAMLphp
- * @subpackage 
+ * @subpackage
  *
  * @license New BSD License - See LICENSE file in the tiqr library for details
  * @copyright (C) 2010-2011 SURFnet BV
@@ -45,11 +45,23 @@ if (array_key_exists('password', $_REQUEST)) {
 	$password = '';
 }
 
+if (array_key_exists('notificationType', $_REQUEST)) {
+    $notificationType = $_REQUEST['notificationType'];
+} else {
+    $notificationType = '';
+}
+
+if (array_key_exists('notificationAddress', $_REQUEST)) {
+    $notificationAddress = $_REQUEST['notificationAddress'];
+} else {
+    $notificationAddress = '';
+}
+
 $attemptsLeft = NULL;
 
 if ($type == 'otp' && !empty($username) && !empty($otp)) {
 	// attempt tiqr otp login
-	$result = sspmod_authTiqr_Auth_Tiqr::processManualLogin($userId, $otp, $state[sspmod_authTiqr_Auth_Tiqr::SESSIONKEYID]);
+	$result = sspmod_authTiqr_Auth_Tiqr::processManualLogin($userId, $otp, $state[sspmod_authTiqr_Auth_Tiqr::SESSIONKEYID], $notificationType, $notificationAddress);
 
 	if ($result == "OK") {
 	     $url = SimpleSAML_Module::getModuleURL('authTiqr/complete.php');
@@ -67,10 +79,10 @@ if ($type == 'otp' && !empty($username) && !empty($otp)) {
 	$errorCode = sspmod_authTiqr_Auth_Source_TiqrUserPass::handleUserPassLogin($authStateId, $username, $password);
 } else {
 	$errorCode = NULL;
-	
-	// Initialize a new Tiqr session. 
+
+	// Initialize a new Tiqr session.
 	$state[sspmod_authTiqr_Auth_Tiqr::SESSIONKEYID] = sspmod_authTiqr_Auth_Tiqr::startAuthenticationSession($userId, $state);
-    SimpleSAML_Auth_State::saveState($state, sspmod_authTiqr_Auth_Tiqr::STAGEID);	
+    SimpleSAML_Auth_State::saveState($state, sspmod_authTiqr_Auth_Tiqr::STAGEID);
 }
 
 $globalConfig = SimpleSAML_Configuration::getInstance();
